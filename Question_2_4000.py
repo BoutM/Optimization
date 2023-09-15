@@ -1,10 +1,18 @@
-"""
-Created on Tue Nov 22 14:49:59 2022
+#Question:
 
-@author: Maxime Bouthillier, OMIS 4000 Section A
-"""
+#A clinic has implemented an online appointement booking system where patients sign
+#up online for a 30-minute, or 1-hour appointmnet each day between 5am - 9am. Patients
+#are then seen by a doctor between 9am - 6pm. The clinic anticipates that each day,
+#the number of patients who request 1-hour appointments will be distributed as a 
+#negative Binomial (n = 0.64, p = 0.02), and the number of patients who request
+#30- minute appointments will be distributed as a Poisson (lam=45). Every idle minute
+#costs the clinic $2 in support and operational costs. If the clinic can bill$55 for a
+#30-minute appointment, and $100 for a 1-hour appointment, how many physicians should
+#the clinic employ in the practice to maximize profit and how much can the clinic 
+#expect to ear per day on average? Note that no overtime appointments are available,
+#some will not be seen (they will go to anotehr clinic). Make sure that longer
+#appointments have priority over shorter appointments due to their more serious nature. 
 
-#Question 2
 
 import numpy as np
 import math
@@ -15,9 +23,9 @@ start = time.time()
 
 #Simulation Parameters
 numofdocs = 12
-Trials = 1_000_0
+Trials = 1_000_0 #number of trials to be executed
 
-#Creation of lists to append values
+#Creation of emply lists as to append future values
 a = []
 b = []
 c = []
@@ -29,12 +37,12 @@ g = []
 for i in range(numofdocs):
     a.append(i)
 
-#For loop, looping through the number of docs
+#lFirstly Looping through the number of doctorcs
 for i in range(numofdocs):
 
-    def simulation(i, Trials):
+    def simulation(i, Trials): #Creation of the simulation with # of doctors
     
-        x = i*540           #level the amount of doctors with the time available during the day
+        x = i*540 # Number of doctors x the minutes they are available
         profits = [0]*Trials
         costs = [0]*Trials
         
@@ -43,11 +51,11 @@ for i in range(numofdocs):
             idle_cost = 0
             profit = 0
 
-            #The Frequency of Clients
-            ha = np.random.negative_binomial(0.64, 0.02)*60          
-            hha = np.random.poisson(45)*30
+            #The Distribution Frequency of Clients
+            ha = np.random.negative_binomial(0.64, 0.02)*60 #Hour Appointments          
+            hha = np.random.poisson(45)*30 #Half-hour Appointments
     
-            if ha >= x:
+            if ha >= x: #if else statements calculating the total costs
                 profit += i*100*9
                 idle_cost += 0
     
@@ -64,13 +72,13 @@ for i in range(numofdocs):
             profits[j] = profit
             costs[j] = idle_cost
         
-        Avg_GP = (sum(profits) - sum(costs))/Trials
+        Avg_GP = (sum(profits) - sum(costs))/Trials #Average Gross profit
          
-        for i in range(Trials):
+        for i in range(Trials): 
             gp = profits[i] - costs[i]
             j =+ (gp-Avg_GP)*(gp-Avg_GP)
         
-        Se = (math.sqrt(j/(Trials-1)))/math.sqrt(Trials)
+        Se = (math.sqrt(j/(Trials-1)))/math.sqrt(Trials) #Standard Error
 
         Avg_c = sum(costs)/Trials
         Avg_p = sum(profits)/Trials
@@ -93,7 +101,7 @@ end = time.time()
 
 time = end-start
 
-#Output
+#Output 
 print("")
 print("Optimal number of doctors: %1.0f" % Dic[max(b)])
 print("This will yeild an average daily gross profit of $%0.2f" % max(b))
@@ -110,6 +118,7 @@ print('Time Elapsed: %2.2f Minutes' %(time/60))
 print('')
 print('Total number of simulations performed: ', f'{numofdocs*Trials:,}')
 
+#Graphical interpretation of results
 fig, axs = plt.subplots(1, 2, figsize=(9, 3))
 axs[0].set_xlabel("Number of Doctors")
 axs[1].set_xlabel("Number of Doctors")
