@@ -21,7 +21,7 @@ g = []
 for i in range(numofdocs):
     a.append(i)
 
-#lFirstly Looping through the number of doctorcs
+# Firstly Looping through the number of doctorcs
 for i in range(numofdocs):
 
     def simulation(i, Trials): #Creation of the simulation with # of doctors
